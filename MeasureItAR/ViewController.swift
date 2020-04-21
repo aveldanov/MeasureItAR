@@ -12,6 +12,9 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
   
+  var dotNodes = [SCNNode]()
+  
+  
   @IBOutlet var sceneView: ARSCNView!
   
   override func viewDidLoad() {
@@ -22,7 +25,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
     
-    sceneView.autoenablesDefaultLighting =  true
+//    sceneView.autoenablesDefaultLighting =  true
 
     
   }
@@ -65,7 +68,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
   
   func addDot(at hitResult : ARHitTestResult){
     
-    let dotGeometry = SCNSphere(radius: 0.05)
+    let dotGeometry = SCNSphere(radius: 0.01)
     let material = SCNMaterial()
     material.diffuse.contents = UIColor.red
     dotGeometry.materials = [material]
@@ -79,6 +82,32 @@ class ViewController: UIViewController, ARSCNViewDelegate {
       hitResult.worldTransform.columns.3.z)
     
     sceneView.scene.rootNode.addChildNode(dotNode)
+    
+    
+    dotNodes.append(dotNode)
+    
+    if dotNodes.count >= 2{
+      
+      calculate()
+      
+    }
+    
+    
+    
+  }
+  
+  func calculate(){
+    
+    let start = dotNodes[0] // first node put on the screen
+    let end = dotNodes[1]
+    
+    // distances
+    let a = end.position.x - start.position.x
+    let b = end.position.y - start.position.y
+    let c = end.position.z - start.position.z
+    
+    let distance = sqrt(pow(a,2) + pow(b,2) + pow(c,2))
+    
   }
   
 }
